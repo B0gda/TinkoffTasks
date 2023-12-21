@@ -1,0 +1,65 @@
+class SegmentTree:
+    def __init__(self, arr):
+        self.n = len(arr)
+        self.tree = [0] * (2 * self.n)
+        self.build(arr)
+
+    def build(self, arr):
+        for i in range(self.n):
+            self.tree[self.n + i] = arr[i]
+        for i in range(self.n - 1, 0, -1):
+            self.tree[i] = max(self.tree[2 * i], self.tree[2 * i + 1])
+
+    def update(self, index, value):
+        index += self.n
+        self.tree[index] += value-1
+        while index > 1:
+            index //= 2
+            self.tree[index] = max(self.tree[2 * index], self.tree[2 * index + 1])
+
+    def query(self, left, right):
+        result = 0
+        left += self.n
+        right += self.n
+        while left <= right:
+            if left % 2 == 1:
+                result = max(result, self.tree[left])
+                left += 1
+            if right % 2 == 0:
+                result = max(result, self.tree[right])
+                right -= 1
+            left //= 2
+            right //= 2
+        return result
+
+
+def apply_query(arr, query, st):
+    if query[0] == '+':
+        l, r, x = map(int, query[1:])
+        for i in range(l - 1, r):
+            arr[i] += x
+            st.update(i, x)
+    else:
+        l, r, k, b = map(int, query[1:])
+        max_min = -1
+        for i in range(l - 1, r):
+            val = min(arr[i], k * (i + 1) + b)
+            val = max(val, st.query(l - 1, i))
+            if val > max_min:
+                max_min = val
+        return max_min
+
+
+n, q = map(int, input().split())
+arr = list(map(int, input().split()))
+st = SegmentTree(arr)
+answers = []
+
+for _ in range(q):
+    query = input().split()
+    result = apply_query(arr, query, st)
+    if result is not None:
+        answers.append(result)
+
+for answer in answers:
+    print(answer)

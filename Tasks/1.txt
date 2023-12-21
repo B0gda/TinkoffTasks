@@ -1,0 +1,30 @@
+def confirmation_name_tinkoff(string):
+    necessary_letters = {'T': 1, 'I': 1, 'N': 1, 'K': 1, 'O': 1, 'F': 2}
+    if len(string) != 7:
+        return "No"
+    l_counter = {}
+    for letter in string.upper():
+        if letter in l_counter:
+            l_counter[letter] += 1
+        else:
+            l_counter[letter] = 1
+    for letter, count in necessary_letters.items():
+        if letter not in l_counter or l_counter[letter] != count:
+            return "No"
+    return "Yes"
+
+
+def set_test_names():
+    t = int(input())
+    results = []
+    for _ in range(t):
+        input_name = input()
+        pre_result = confirmation_name_tinkoff(input_name)
+        results.append(pre_result)
+    return results
+
+
+test_results = set_test_names()
+for result_answer in test_results:
+    print(result_answer)
+

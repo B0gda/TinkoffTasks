@@ -1,0 +1,29 @@
+def counter_for_manul(n, manuls, friendships, events):
+    counter = {i: manuls[i - 1] for i in range(1, n + 1)}
+
+    friends = {i: [] for i in range(1, n + 1)}
+    for v, u in friendships:
+        friends[v].append(u)
+        friends[u].append(v)
+
+    result = []
+    for event in events:
+        if event[0] == '?':
+            result.append(counter[int(event[1])])
+        else:
+            sender, manuls_sent = int(event[1]), int(event[2])
+            for friend in friends[sender]:
+                counter[friend] += manuls_sent
+
+    return result
+
+n, m, q = map(int, input().split())
+manuls = list(map(int, input().split()))
+pair_friendships = [tuple(map(int, input().split())) for _ in range(m)]
+events = [input().split() for _ in range(q)]
+
+results = counter_for_manul(n, manuls, pair_friendships, events)
+
+for res in results:
+    print(res)
+

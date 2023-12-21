@@ -1,0 +1,36 @@
+def find_best_investment_package(k, companies, tree):
+    company_indices = {}
+    for index, company in enumerate(companies):
+        if company not in company_indices:
+            company_indices[company] = len(company_indices)
+
+    graph_all_packages = {}
+    for node in tree:
+        parent, cost, company = node
+        parent = int(parent)
+        cost = int(cost)
+        company = company_indices[company]
+        if parent not in graph_all_packages:
+            graph_all_packages[parent] = []
+        graph_all_packages[parent].append((parent, cost, company))
+
+    costs_to_each = [-1] * k
+    for node in graph_all_packages:
+        if node == 0:
+            continue
+        for _, cost, company in graph_all_packages[node]:
+            if costs_to_each[company] == -1 or costs_to_each[company] >= cost:
+                costs_to_each[company] = cost
+
+    if -1 in costs_to_each:
+        return -1
+    total_cost = sum(cost for cost in costs_to_each if cost != -1)
+    return total_cost
+
+n, k = map(int, input().split())
+companies = [input().strip() for _ in range(k)]
+tree = [input().split() for _ in range(n)]
+
+result = find_best_investment_package(k, companies, tree)
+print(result)
+

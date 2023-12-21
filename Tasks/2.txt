@@ -1,0 +1,27 @@
+def is_everybody_in_contact(n, social_abilities):
+    social_abilities.sort()
+    if n == 1 and social_abilities[0] >= 1:
+        return "Yes"
+    total_degree = sum(social_abilities)
+    if total_degree % 2 != 0 or social_abilities[-1] >= n:
+        return "No"
+    else:
+        return "Yes"
+
+
+def enter_all_developers():
+    t = int(input().strip())
+    results = []
+    for _ in range(t):
+        n = int(input().strip())
+        social_abilities = list(map(int, input().strip().split()))
+        result_string = is_everybody_in_contact(n, social_abilities)
+        results.append(result_string)
+
+    return results
+
+
+test_results = enter_all_developers()
+for result in test_results:
+    print(result)
+
